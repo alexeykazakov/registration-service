@@ -22,6 +22,8 @@ require (
 	github.com/pelletier/go-toml v1.4.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/satori/go.uuid v1.2.0
+	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749 // indirect
+	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.4.0
@@ -33,6 +35,7 @@ require (
 	google.golang.org/appengine v1.6.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/square/go-jose.v2 v2.3.1
+	gotest.tools v2.2.0+incompatible
 	k8s.io/apimachinery v0.0.0-20190607205628-5fbcd19f360b
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/utils v0.0.0-20190809000727-6c36bc71fc4a // indirect
