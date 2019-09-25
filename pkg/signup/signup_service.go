@@ -3,11 +3,14 @@ package signup
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	crtapi "github.com/codeready-toolchain/api/pkg/apis/toolchain/v1alpha1"
+	"github.com/codeready-toolchain/registration-service/pkg/kubeclient"
+
 	"k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
-	"strings"
 )
 
 type SignupServiceConfiguration interface {
@@ -20,7 +23,7 @@ type SignupService interface {
 
 type SignupServiceImpl struct {
 	Namespace string
-	Client    UserSignupClient
+	Client    kubeclient.CRTClientInterface
 }
 
 func NewSignupService(cfg SignupServiceConfiguration) (SignupService, error) {
@@ -29,14 +32,14 @@ func NewSignupService(cfg SignupServiceConfiguration) (SignupService, error) {
 		return nil, err
 	}
 
-	client, err := NewUserSignupClient(k8sConfig)
+	client, err := kubeclient.NewCRTV1Alpha1Client(k8sConfig, cfg.GetNamespace())
 	if err != nil {
 		return nil, err
 	}
 
 	return &SignupServiceImpl{
 		Namespace: cfg.GetNamespace(),
-		Client:    client.UserSignups(cfg.GetNamespace()),
+		Client:    client.Client(),
 	}, nil
 }
 
@@ -59,7 +62,7 @@ func (c *SignupServiceImpl) CreateUserSignup(ctx context.Context, username, user
 		},
 	}
 
-	created, err := c.Client.Create(userSignup)
+	created, err := c.Client.CreateUserSignup(userSignup)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +77,7 @@ func (c *SignupServiceImpl) transformAndValidateUserName(username string) (strin
 	transformed := replaced
 
 	for {
-		userSignup, err := c.Client.Get(transformed)
+		userSignup, err := c.Client.GetUserSignup(transformed)
 		if err != nil {
 			if !errors.IsNotFound(err) {
 				return "", err
