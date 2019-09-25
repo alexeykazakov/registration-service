@@ -11,7 +11,6 @@ require (
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-logr/logr v0.1.0 // indirect
 	github.com/go-logr/zapr v0.1.0 // indirect
-	github.com/go-openapi/spec v0.19.2 // indirect
 	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/googleapis/gnostic v0.3.1 // indirect
 	github.com/lestrrat-go/jwx v0.9.0
@@ -22,8 +21,6 @@ require (
 	github.com/pelletier/go-toml v1.4.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749 // indirect
-	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/viper v1.4.0
 	github.com/stretchr/testify v1.4.0
@@ -36,13 +33,14 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/square/go-jose.v2 v2.3.1
 	gotest.tools v2.2.0+incompatible
-	k8s.io/apimachinery v0.0.0-20190607205628-5fbcd19f360b
+	k8s.io/apimachinery v0.0.0-20190917163033-a891081239f5
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/utils v0.0.0-20190809000727-6c36bc71fc4a // indirect
 	sigs.k8s.io/controller-runtime v0.1.12
 	sigs.k8s.io/yaml v1.1.0 // indirect
 )
 
+// Pinned to kubernetes-1.14.1
 replace (
 	k8s.io/api => k8s.io/api v0.0.0-20190409021203-6e4e0e4f393b
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.0.0-20190409022649-727a075fdec8
