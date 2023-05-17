@@ -3,23 +3,27 @@ package link
 import (
 	"bytes"
 	"fmt"
+	"net/url"
 	"strings"
 	"text/template"
 
 	"github.com/codeready-toolchain/registration-service/pkg/signup"
-
-	"github.com/gin-gonic/gin"
 )
+
+// Link represents a link payload
+type Link struct {
+	OutputURL string
+}
 
 type LinkType interface {
 	Matches(inputPath string) bool
-	OutputURL(ctx *gin.Context, signup signup.Signup) (string, error)
+	OutputURL(inputURL *url.URL, signup signup.Signup) (string, error)
 }
 
 type linkTypeImpl struct {
 	inputPath      string
 	outputTemplate *template.Template
-	getParams      func(ctx *gin.Context, signup signup.Signup) params
+	getParams      func(inputURL *url.URL, signup signup.Signup) params
 }
 
 type params struct {
@@ -33,7 +37,7 @@ type params struct {
 var openShiftAdd = &linkTypeImpl{
 	inputPath:      "/openshift/add/",
 	outputTemplate: newTemplate("add", "{{.ConsoleMember}}/add/ns/{{.UserNamespace}}"),
-	getParams: func(_ *gin.Context, signup signup.Signup) params {
+	getParams: func(_ *url.URL, signup signup.Signup) params {
 		return params{
 			ConsoleMember: getConsoleMember(signup),
 			UserNamespace: getUserNamespace(signup),
@@ -44,7 +48,7 @@ var openShiftAdd = &linkTypeImpl{
 var rhods = &linkTypeImpl{
 	inputPath:      "/datascience/",
 	outputTemplate: newTemplate("rhods", "{{.RHODSMember}}/notebookController/spawner"),
-	getParams: func(_ *gin.Context, signup signup.Signup) params {
+	getParams: func(_ *url.URL, signup signup.Signup) params {
 		return params{
 			RHODSMember: getRHODSMember(signup),
 		}
@@ -54,7 +58,7 @@ var rhods = &linkTypeImpl{
 var devSpaces = &linkTypeImpl{
 	inputPath:      "/devspaces/",
 	outputTemplate: newTemplate("che", "{{.DevSpacesMember}}/"),
-	getParams: func(_ *gin.Context, signup signup.Signup) params {
+	getParams: func(_ *url.URL, signup signup.Signup) params {
 		return params{
 			DevSpacesMember: getDevSpacesMember(signup),
 		}
@@ -64,17 +68,17 @@ var devSpaces = &linkTypeImpl{
 var webConsoleBookmark = &linkTypeImpl{
 	inputPath:      "/k8s/",
 	outputTemplate: newTemplate("console", "{{.ConsoleMember}}/{{.Path}}"),
-	getParams: func(ctx *gin.Context, signup signup.Signup) params {
+	getParams: func(inputURL *url.URL, signup signup.Signup) params {
 		return params{
 			ConsoleMember: getConsoleMember(signup),
-			Path:          getPath(ctx),
+			Path:          inputURL.Path,
 		}
 	},
 }
 
 var DefaultLink = &linkTypeImpl{
 	outputTemplate: newTemplate("default", "{{.ConsoleMember}}/topology/ns/{{.UserNamespace}}"),
-	getParams: func(ctx *gin.Context, signup signup.Signup) params {
+	getParams: func(_ *url.URL, signup signup.Signup) params {
 		return params{
 			ConsoleMember: getConsoleMember(signup),
 			UserNamespace: getUserNamespace(signup),
@@ -92,10 +96,10 @@ func newTemplate(name, outputTemplate string) *template.Template {
 	return tmpl
 }
 
-func (l *linkTypeImpl) OutputURL(ctx *gin.Context, signup signup.Signup) (string, error) {
+func (l *linkTypeImpl) OutputURL(inputURL *url.URL, signup signup.Signup) (string, error) {
 	var result bytes.Buffer
 
-	if err := l.outputTemplate.Execute(&result, l.getParams(ctx, signup)); err != nil {
+	if err := l.outputTemplate.Execute(&result, l.getParams(inputURL, signup)); err != nil {
 		return "", err
 	}
 
@@ -128,13 +132,6 @@ func getDevSpacesMember(signup signup.Signup) string {
 
 func getUserNamespace(signup signup.Signup) string {
 	return fmt.Sprintf("%s-dev", signup.CompliantUsername)
-}
-
-func getPath(ctx *gin.Context) string {
-	if ctx.Request != nil && ctx.Request.URL != nil {
-		return ctx.Request.URL.Path
-	}
-	return ""
 }
 
 // getAppsURL returns a URL for the specific app

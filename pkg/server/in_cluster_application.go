@@ -52,3 +52,7 @@ func (r InClusterApplication) VerificationService() service.VerificationService 
 func (r InClusterApplication) MemberClusterService() service.MemberClusterService {
 	return r.serviceFactory.MemberClusterService()
 }
+
+func (r InClusterApplication) LinkService() service.LinkService {
+	return r.serviceFactory.LinkService()
+}

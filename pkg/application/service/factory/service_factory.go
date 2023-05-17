@@ -9,6 +9,7 @@ import (
 	"github.com/codeready-toolchain/registration-service/pkg/informers"
 	informerservice "github.com/codeready-toolchain/registration-service/pkg/informers/service"
 	"github.com/codeready-toolchain/registration-service/pkg/kubeclient"
+	linkservice "github.com/codeready-toolchain/registration-service/pkg/link/service"
 	"github.com/codeready-toolchain/registration-service/pkg/log"
 	clusterservice "github.com/codeready-toolchain/registration-service/pkg/proxy/service"
 	signupservice "github.com/codeready-toolchain/registration-service/pkg/signup/service"
@@ -86,6 +87,10 @@ func (s *ServiceFactory) VerificationService() service.VerificationService {
 
 func (s *ServiceFactory) WithVerificationServiceOption(opt verificationservice.VerificationServiceOption) {
 	s.verificationServiceOptions = append(s.verificationServiceOptions, opt)
+}
+
+func (s *ServiceFactory) LinkService() service.LinkService {
+	return linkservice.NewLinkService(s.getContext())
 }
 
 // Option an option to configure the Service Factory

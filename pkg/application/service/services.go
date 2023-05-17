@@ -1,7 +1,10 @@
 package service
 
 import (
+	"net/url"
+
 	toolchainv1alpha1 "github.com/codeready-toolchain/api/api/v1alpha1"
+	"github.com/codeready-toolchain/registration-service/pkg/link"
 	"github.com/codeready-toolchain/registration-service/pkg/proxy/access"
 	"github.com/codeready-toolchain/registration-service/pkg/signup"
 	"github.com/gin-gonic/gin"
@@ -40,9 +43,14 @@ type MemberClusterService interface {
 	GetClusterAccess(userID, username, workspace, proxyPluginName string) (*access.ClusterAccess, error)
 }
 
+type LinkService interface {
+	Link(inputURL *url.URL, userID, username string) (*link.Link, error)
+}
+
 type Services interface {
 	InformerService() InformerService
 	SignupService() SignupService
 	VerificationService() VerificationService
 	MemberClusterService() MemberClusterService
+	LinkService() LinkService
 }
