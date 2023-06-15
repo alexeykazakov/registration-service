@@ -20,6 +20,7 @@ type MockableApplication struct {
 	mockSignupService        service.SignupService
 	mockVerificationService  service.VerificationService
 	mockMemberClusterService service.MemberClusterService
+	mockLinkService          service.LinkService
 }
 
 func (m *MockableApplication) SignupService() service.SignupService {
@@ -64,4 +65,15 @@ func (m *MockableApplication) InformerService() service.InformerService {
 
 func (m *MockableApplication) MockInformerService(svc service.InformerService) {
 	m.mockInformerService = svc
+}
+
+func (m *MockableApplication) LinkService() service.LinkService {
+	if m.mockLinkService != nil {
+		return m.mockLinkService
+	}
+	return m.serviceFactory.LinkService()
+}
+
+func (m *MockableApplication) MockLinkService(svc service.LinkService) {
+	m.mockLinkService = svc
 }

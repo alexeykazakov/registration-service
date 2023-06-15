@@ -41,6 +41,10 @@ func (a *ProxyFakeApp) MemberClusterService() service.MemberClusterService {
 	return &fakeClusterService{a}
 }
 
+func (a *ProxyFakeApp) LinkService() service.LinkService {
+	panic("LinkService shouldn't be called")
+}
+
 type fakeClusterService struct {
 	fakeApp *ProxyFakeApp
 }

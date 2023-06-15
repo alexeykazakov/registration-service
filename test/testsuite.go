@@ -4,20 +4,18 @@ import (
 	"context"
 	"os"
 
+	toolchainv1alpha1 "github.com/codeready-toolchain/api/api/v1alpha1"
 	"github.com/codeready-toolchain/registration-service/pkg/application/service/factory"
 	"github.com/codeready-toolchain/registration-service/pkg/configuration"
 	"github.com/codeready-toolchain/registration-service/pkg/kubeclient"
 	"github.com/codeready-toolchain/registration-service/pkg/log"
 	"github.com/codeready-toolchain/registration-service/test/fake"
-
-	toolchainv1alpha1 "github.com/codeready-toolchain/api/api/v1alpha1"
 	commonconfig "github.com/codeready-toolchain/toolchain-common/pkg/configuration"
 	"github.com/codeready-toolchain/toolchain-common/pkg/test"
 	testconfig "github.com/codeready-toolchain/toolchain-common/pkg/test/config"
 
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
