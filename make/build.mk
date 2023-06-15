@@ -1,9 +1,9 @@
 # By default the project should be build under GOPATH/src/github.com/<orgname>/<reponame>
-GO_PACKAGE_ORG_NAME ?= $(shell basename $$(dirname $$PWD))
+GO_PACKAGE_ORG_NAME ?= codeready-toolchain
 GO_PACKAGE_REPO_NAME ?= $(shell basename $$PWD)
 GO_PACKAGE_PATH ?= github.com/${GO_PACKAGE_ORG_NAME}/${GO_PACKAGE_REPO_NAME}
 
-export LDFLAGS=-ldflags "-X ${GO_PACKAGE_PATH}/pkg/configuration.Commit=${GIT_COMMIT_ID} -X ${GO_PACKAGE_PATH}/cmd/configuration.BuildTime=${BUILD_TIME}"
+export LDFLAGS=-ldflags "-X ${GO_PACKAGE_PATH}/pkg/configuration.Commit=${GIT_COMMIT_ID} -X ${GO_PACKAGE_PATH}/pkg/configuration.BuildTime=${BUILD_TIME}"
 goarch ?= $(shell go env GOARCH)
 
 .PHONY: build build-prod build-dev
