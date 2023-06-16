@@ -3,12 +3,11 @@ package server
 import (
 	"github.com/codeready-toolchain/registration-service/pkg/assets"
 	"github.com/codeready-toolchain/registration-service/pkg/auth"
-	"github.com/gin-contrib/static"
-
 	"github.com/codeready-toolchain/registration-service/pkg/configuration"
 	"github.com/codeready-toolchain/registration-service/pkg/controller"
 	"github.com/codeready-toolchain/registration-service/pkg/middleware"
 
+	"github.com/gin-contrib/static"
 	errs "github.com/pkg/errors"
 )
 
@@ -26,6 +25,7 @@ func (srv *RegistrationServer) SetupRoutes() error {
 		authConfigCtrl := controller.NewAuthConfig()
 		analyticsCtrl := controller.NewAnalytics()
 		signupCtrl := controller.NewSignup(srv.application)
+		linkCtrl := controller.NewLink(srv.application)
 
 		// create the auth middleware
 		var authMiddleware *middleware.JWTMiddleware
@@ -50,6 +50,7 @@ func (srv *RegistrationServer) SetupRoutes() error {
 		securedV1.GET("/signup", signupCtrl.GetHandler)
 		securedV1.GET("/signup/verification/:code", signupCtrl.VerifyPhoneCodeHandler) // TODO: also provide a `POST /signup/verification/phone-code` +deprecate this one + migrate UI?
 		securedV1.POST("/signup/verification/activation-code", signupCtrl.VerifyActivationCodeHandler)
+		securedV1.GET("/link/*path", linkCtrl.GetHandler) //TODO test wildcard if it works and use the *path instead of passing the entire url to the link service.
 
 		// if we are in testing mode, we also add a secured health route for testing
 		if configuration.IsTestingMode() {

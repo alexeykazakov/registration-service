@@ -17,6 +17,13 @@ type Link struct {
 	app application.Application
 }
 
+// NewLink returns a new Link instance.
+func NewLink(app application.Application) *Link {
+	return &Link{
+		app: app,
+	}
+}
+
 // GetHandler returns a direct link based on the incoming request
 func (l *Link) GetHandler(ctx *gin.Context) {
 	userID := ctx.GetString(context.SubKey)
